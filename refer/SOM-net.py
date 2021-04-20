@@ -138,39 +138,6 @@ if __name__ == '__main__':
     print(y_train_predict)
     print(classification_report(test_label, y_predict[0:-1]))
 
-
-
-
-
-
-
-    #网络测试阶段
-    for i in range(16):
-        test=test_data[50*i:50*(i+1),:]
-        test_class=0 #分类表示符，默认等于0代表还未进行分类
-        for k in range(len(net_sum)):
-            time.sleep(0.5)    #方便观察过程，让程序等待0.5s
-            e_q=net_sum[k]['net'].quantization_error(test)
-            if e_q <= net_sum[k]['max_quantization_error']:
-                test_class=k+1
-                print('classify into class '+str(k+1))
-            else:
-                continue
-        if test_class==0:   #遇到不在已知工况范围内的情况，学习新的网络进行学习
-            print('abnormal case! learning a new net')
-            learnt_net = {}
-            size = math.ceil(np.sqrt(5 * np.sqrt(len(test))))
-            som = MiniSom(size, size, feature_number, sigma=3, learning_rate=0.5,
-                      neighborhood_function='bubble')
-            som.train_batch(test, max_iter, verbose=True)
-            learnt_net['net'] = som
-            tmp = []
-            for k in range(len(test)):
-                tmp.append(som.quantization_error(test[k:k + 1, :]))
-            learnt_net['mean_quantization_error'] = np.mean(tmp)  # 计算网络训练时的平均量化误差 （等同于论文中的Eq-training）
-            learnt_net['max_quantization_error'] = np.max(tmp)  # 计算网络训练时的最大量化误差 (等同于论文中的d_max-training)
-            net_sum.append(learnt_net)
-    #print(net_sum[2]['net'].quantization_error(test_data[100:101,:]),net_sum[2]['max_quantization_error'])
     '''
     知乎example
     N=train_data.shape[0]
