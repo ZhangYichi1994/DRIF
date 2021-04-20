@@ -119,14 +119,12 @@ if __name__ == '__main__':
     tmp=[]
     for k in range(len(trainData)):
         tmp.append(som.quantization_error(trainData[k:k+1,:]))
-    print(tmp)
     learnt_net['mean_quantization_error']=np.mean(tmp)  #计算网络训练时的平均量化误差 （等同于论文中的Eq-training）
     learnt_net['max_quantization_error']=np.max(tmp)    #计算网络训练时的最大量化误差 (等同于论文中的d_max-training)
 
     cal_limit=kde_limit(0.99,np.array(tmp))   #创建一个kde控制限计算的对象（创建时要输入两个参数：1.置信度 2.输入数据）
     limit2=cal_limit.fit()              #调用该对象中计算功能（无需输入其他参数，自动进行计算）
     learnt_net['kde_limit'] = limit2
-    print(limit2)
 
     learnt_net['test_mean'] = test_mean
     learnt_net['test_std'] = test_std

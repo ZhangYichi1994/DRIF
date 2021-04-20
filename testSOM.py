@@ -55,6 +55,8 @@ if __name__ == '__main__':
     with open('som.p', 'rb') as infile:
         learnt_net = pickle.load(infile)
 
+    test_mean = learnt_net['test_mean']
+    test_std = learnt_net['test_std']
     # 网络测试
     model = 1
     y_predict = classify(learnt_net, test_data, test_mean, test_std, model)
